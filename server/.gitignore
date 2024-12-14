@@ -3,6 +3,12 @@
 /node_modules
 /build
 
+# TypeScript build info
+*.tsbuildinfo
+
+# Configuración de compilación específica (opcional, si es generado automáticamente)
+tsconfig.build.json
+
 # Logs
 logs
 *.log
