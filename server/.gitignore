@@ -54,3 +54,18 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# TypeScript
+*.tsbuildinfo
+
+# Source maps
+*.map
+
+# Docker
+docker-volume/
+
+# Dependency directories
+node_modules/
+
+# Misc
+*.log
