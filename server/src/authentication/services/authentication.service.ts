@@ -17,6 +17,8 @@ import { DateUtilsService } from '../../common/utils/date-time/date-time.service
 import { HashingService } from '../../common/utils/hashing/hashing.service';
 import { UniqueCodeService } from '../../common/utils/unique-code/unique-code.service';
 import { ConfigService } from '@nestjs/config';
+import { EmailService } from '../../email/email.service.js';
+import { verifyEmailTemplate } from '../../email/templates/template.js';
 
 @Injectable()
 export class AuthenticationService {
@@ -30,7 +32,8 @@ export class AuthenticationService {
     private readonly dateUtilsService: DateUtilsService,
     private readonly hashingService: HashingService,
     private readonly uniqueCodeService: UniqueCodeService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly emailService: EmailService
   ) {}
 
   public async register(registerData: RegisterDto) {
@@ -53,11 +56,18 @@ export class AuthenticationService {
       password: hashedPassword,
     });
 
-    await this.verificationCodeRepository.create({
+    const verification = await this.verificationCodeRepository.create({
       userId: newUser._id as Types.ObjectId,
       code: this.uniqueCodeService.generateUniqueCode(),
       type: VerificationEnum.EMAIL_VERIFICATION,
       expiresAt: this.dateUtilsService.fortyFiveMinutesFromNow(),
+    });
+
+    const verificationUrl = `${process.env.APP_ORIGIN}/confirm-account?code=${verification.code}`;
+
+    await this.emailService.sendEmail({
+      to: newUser.email,
+      ...verifyEmailTemplate(verificationUrl),
     });
 
     return { user: newUser };

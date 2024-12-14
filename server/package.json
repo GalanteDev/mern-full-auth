@@ -36,6 +36,7 @@
     "@nestjs/mongoose": "^10.1.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^8.1.0",
     "aws-lambda": "^1.0.7",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
@@ -51,6 +52,7 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "serverless": "^4.4.12",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

@@ -3,32 +3,46 @@ import serverlessExpress from '@codegenie/serverless-express';
 import { Callback, Context, Handler } from 'aws-lambda';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 let server: Handler;
 
 async function bootstrap(): Promise<Handler | void> {
   const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'error', 'warn', 'debug'], // Logs detallados
+    logger: ['log', 'error', 'warn', 'debug'],
   });
 
-  // Middleware de cookies
   app.use(cookieParser());
-
-  // Configuración de CORS
   app.enableCors({
-    origin: process.env.IS_OFFLINE
-      ? 'http://localhost:3000' // Entorno local
-      : 'https://tu-dominio-produccion.com', // Cambiar según tu dominio en producción
+    origin: process.env.IS_OFFLINE ? 'http://localhost:3000' : '*',
     credentials: true,
   });
 
-  // Inicializar la aplicación
+  // Configurar Swagger para el entorno offline
+  const isOffline =
+    process.env.IS_OFFLINE === 'true' || process.env.AWS_SAM_LOCAL === 'true';
+
+  const stagePrefix = process.env.IS_OFFLINE ? '/dev' : '';
+
+  const config = new DocumentBuilder()
+    .setTitle('My API')
+    .setDescription('The API description')
+    .setVersion('1.0')
+    .addServer(stagePrefix)
+    .addTag('api')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  // Define el path exacto de Swagger
+  SwaggerModule.setup('dev/api', app, document); // La documentación estará disponible en /api
+
   await app.init();
   const expressApp = app.getHttpAdapter().getInstance();
   return serverlessExpress({ app: expressApp });
 }
 
-// Modo producción: Exporta el handler para AWS Lambda
 export const handler: Handler = async (
   event: any,
   context: Context,
@@ -40,11 +54,8 @@ export const handler: Handler = async (
   return server(event, context, callback);
 };
 
-// Modo desarrollo: Ejecuta la app localmente si `IS_OFFLINE` está activado
 if (process.env.IS_OFFLINE) {
   bootstrap()
-    // eslint-disable-next-line no-console
-    .then(() => console.log('Server is running in offline mode'))
-    // eslint-disable-next-line no-console
+    .then(() => console.log('Server is running locally with Swagger enabled'))
     .catch((err) => console.error('Error bootstrapping the app:', err));
 }

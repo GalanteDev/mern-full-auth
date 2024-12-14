@@ -12,6 +12,9 @@ import { UtilsModule } from '../common/utils/utils.module.js';
 import { SessionRepository } from '../database/repositories/session.respository.js';
 import { DatabaseModule } from '../database/database.module.js';
 import { UniqueCodeService } from '../common/utils/unique-code/unique-code.service.js';
+import { EmailModule } from '../email/email.module.js';
+import { EmailService } from '../email/email.service.js';
+import { resendProvider } from '../email/resend.provider.js';
 
 @Module({
   imports: [
@@ -26,6 +29,7 @@ import { UniqueCodeService } from '../common/utils/unique-code/unique-code.servi
       }),
       inject: [ConfigService],
     }),
+    EmailModule,
   ],
   providers: [
     AuthenticationService,
@@ -37,6 +41,8 @@ import { UniqueCodeService } from '../common/utils/unique-code/unique-code.servi
     SessionRepository,
     UniqueCodeService,
     ConfigService,
+    EmailService,
+    resendProvider,
   ],
   controllers: [AuthenticationController],
   exports: [AuthenticationService],

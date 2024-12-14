@@ -4,6 +4,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { UtilsModule } from './common/utils/utils.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UtilsModule } from './common/utils/utils.module';
     DatabaseModule,
     AuthenticationModule,
     UtilsModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],
