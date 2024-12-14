@@ -47,7 +47,11 @@ export class AuthenticationService {
 
     const hashedPassword = await this.hashingService.hashValue(password);
 
-    const newUser = await this.userRepository.create({ name, email, password: hashedPassword });
+    const newUser = await this.userRepository.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
 
     await this.verificationCodeRepository.create({
       userId: newUser._id as Types.ObjectId,
@@ -73,7 +77,10 @@ export class AuthenticationService {
       });
     }
 
-    const isPasswordValid = await this.hashingService.compareValue(password, user.password);
+    const isPasswordValid = await this.hashingService.compareValue(
+      password,
+      user.password
+    );
     if (!isPasswordValid) {
       this.logger.warn(`Login failed: Invalid password for email: ${email}`);
       throw new BadRequestException({
@@ -131,24 +138,25 @@ export class AuthenticationService {
   public async refreshToken(refreshToken: string) {
     const secret = this.configService.get<string>('JWT_REFRESH_SECRET');
     if (!secret) {
-      throw new Error('JWT_REFRESH_SECRET is not defined in environment variables');
+      throw new Error(
+        'JWT_REFRESH_SECRET is not defined in environment variables'
+      );
     }
 
     const { payload, error } =
       this.jwtTokenService.verifyRefreshToken<RefreshTPayload>(refreshToken);
 
     if (error) {
-      console.error('JWT verification failed:', error);
       throw new UnauthorizedException('Invalid refresh token');
     }
-
-    console.log('Decoded payload:', payload);
 
     if (!payload || typeof payload.sessionId !== 'string') {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const session = await this.sessionRepository.findById(new Types.ObjectId(payload.sessionId));
+    const session = await this.sessionRepository.findById(
+      new Types.ObjectId(payload.sessionId)
+    );
     if (!session) {
       throw new UnauthorizedException('Session does not exist');
     }
@@ -157,7 +165,8 @@ export class AuthenticationService {
     }
 
     const sessionRequireRefresh =
-      session.expiredAt.getTime() - Date.now() <= DateUtilsService.ONE_DAY_IN_MS;
+      session.expiredAt.getTime() - Date.now() <=
+      DateUtilsService.ONE_DAY_IN_MS;
 
     if (sessionRequireRefresh) {
       session.expiredAt = this.dateUtilsService.calculateExpirationDate(
@@ -182,7 +191,8 @@ export class AuthenticationService {
   }
 
   public async verifyEmail(code: string) {
-    const validCode = await this.verificationCodeRepository.findByVerificationCode(code);
+    const validCode =
+      await this.verificationCodeRepository.findByVerificationCode(code);
 
     if (!validCode) {
       throw new BadRequestException({
@@ -191,9 +201,9 @@ export class AuthenticationService {
       });
     }
 
-    const updatedUser = await this.userRepository.findByIdAndUpdate(validCode.userId);
-
-    console.log('palito', updatedUser);
+    const updatedUser = await this.userRepository.findByIdAndUpdate(
+      validCode.userId
+    );
 
     if (!updatedUser) {
       throw new BadRequestException({

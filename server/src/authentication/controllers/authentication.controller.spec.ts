@@ -36,7 +36,10 @@ describe('AuthenticationController', () => {
     controller = module.get<AuthenticationController>(AuthenticationController);
     authService = module.get<AuthenticationService>(AuthenticationService);
     cookiesService = module.get<CookiesService>(CookiesService);
-    res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
   });
 
   describe('login', () => {
@@ -62,9 +65,15 @@ describe('AuthenticationController', () => {
       };
 
       jest.spyOn(authService, 'login').mockResolvedValue(loginResponse);
-      jest.spyOn(cookiesService, 'setAuthenticationCookies').mockReturnValue(res);
+      jest
+        .spyOn(cookiesService, 'setAuthenticationCookies')
+        .mockReturnValue(res);
 
-      await controller.login({ headers: { 'user-agent': 'test-agent' } } as any, res, loginDto);
+      await controller.login(
+        { headers: { 'user-agent': 'test-agent' } } as any,
+        res,
+        loginDto
+      );
 
       expect(authService.login).toHaveBeenCalledWith(
         { ...loginDto, userAgent: 'test-agent' },
@@ -97,7 +106,11 @@ describe('AuthenticationController', () => {
 
       jest.spyOn(authService, 'login').mockResolvedValue(loginResponse);
 
-      await controller.login({ headers: { 'user-agent': 'test-agent' } } as any, res, loginDto);
+      await controller.login(
+        { headers: { 'user-agent': 'test-agent' } } as any,
+        res,
+        loginDto
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
@@ -115,7 +128,11 @@ describe('AuthenticationController', () => {
         .mockRejectedValue(new UnauthorizedException('Invalid credentials'));
 
       await expect(
-        controller.login({ headers: { 'user-agent': 'test-agent' } } as any, res, loginDto)
+        controller.login(
+          { headers: { 'user-agent': 'test-agent' } } as any,
+          res,
+          loginDto
+        )
       ).rejects.toThrowError(UnauthorizedException);
     });
   });

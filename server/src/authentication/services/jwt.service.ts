@@ -52,7 +52,9 @@ export class JwtTokenService {
       });
       return { payload };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Unknown error occurred' };
+      return {
+        error: err instanceof Error ? err.message : 'Unknown error occurred',
+      };
     }
   }
 
@@ -65,7 +67,9 @@ export class JwtTokenService {
       });
       return { payload };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Unknown error occurred' };
+      return {
+        error: err instanceof Error ? err.message : 'Unknown error occurred',
+      };
     }
   }
 }

@@ -25,7 +25,10 @@ export class CookiesService {
     this.defaults = {
       httpOnly: true,
       secure: this.configService.get<string>('NODE_ENV') === 'production',
-      sameSite: this.configService.get<string>('NODE_ENV') === 'production' ? 'strict' : 'lax',
+      sameSite:
+        this.configService.get<string>('NODE_ENV') === 'production'
+          ? 'strict'
+          : 'lax',
     };
   }
 
@@ -58,22 +61,21 @@ export class CookiesService {
   /**
    * Configurar cookies de autenticación en la respuesta
    */
-  setAuthenticationCookies({ res, accessToken, refreshToken }: CookiePayloadType): Response {
-    console.log('Setting authentication cookies...');
-    console.log('Access Token:', accessToken);
-    console.log('Refresh Token:', refreshToken);
-
-    // Configurar ambas cookies en la respuesta
+  setAuthenticationCookies({
+    res,
+    accessToken,
+    refreshToken,
+  }: CookiePayloadType): Response {
     return res
       .cookie('accessToken', accessToken, this.getAccessTokenCookieOptions())
-      .cookie('refreshToken', refreshToken, this.getRefreshTokenCookieOptions());
+      .cookie(
+        'refreshToken',
+        refreshToken,
+        this.getRefreshTokenCookieOptions()
+      );
   }
 
-  /**
-   * Borrar cookies de autenticación
-   */
   clearAuthenticationCookies(res: Response): Response {
-    console.log('Clearing authentication cookies...');
     return res
       .clearCookie('accessToken', { path: ACCESS_TOKEN_PATH })
       .clearCookie('refreshToken', { path: REFRESH_TOKEN_PATH });

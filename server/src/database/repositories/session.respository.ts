@@ -6,7 +6,9 @@ import { BaseRepository } from './entity.repository';
 
 @Injectable()
 export class SessionRepository extends BaseRepository<SessionDocument> {
-  constructor(@InjectModel('Session') private sessionModel: Model<SessionDocument>) {
+  constructor(
+    @InjectModel('Session') private sessionModel: Model<SessionDocument>
+  ) {
     super(sessionModel);
   }
 
@@ -14,8 +16,13 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     return this.sessionModel.findById(sessionId).exec();
   }
 
-  async update(id: string, sessionData: Partial<SessionDocument>): Promise<SessionDocument | null> {
+  async update(
+    id: string,
+    sessionData: Partial<SessionDocument>
+  ): Promise<SessionDocument | null> {
     const objectId = new Types.ObjectId(id);
-    return this.sessionModel.findByIdAndUpdate(objectId, sessionData, { new: true }).exec();
+    return this.sessionModel
+      .findByIdAndUpdate(objectId, sessionData, { new: true })
+      .exec();
   }
 }

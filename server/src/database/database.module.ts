@@ -24,6 +24,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ]),
   ],
   providers: [UserRepository, VerificationCodeRepository, SessionRepository],
-  exports: [UserRepository, VerificationCodeRepository, SessionRepository, MongooseModule],
+  exports: [
+    UserRepository,
+    VerificationCodeRepository,
+    SessionRepository,
+    MongooseModule,
+  ],
 })
 export class DatabaseModule {}

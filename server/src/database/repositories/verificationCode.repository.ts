@@ -9,11 +9,14 @@ import { VerificationEnum } from '../../common/enums/verification-code.enum.js';
 @Injectable()
 export class VerificationCodeRepository extends BaseRepository<VerificationCodeDocument> {
   constructor(
-    @InjectModel('VerificationCode') private verificationCodeModel: Model<VerificationCodeDocument>
+    @InjectModel('VerificationCode')
+    private verificationCodeModel: Model<VerificationCodeDocument>
   ) {
     super(verificationCodeModel);
   }
-  async findByVerificationCode(code: string): Promise<VerificationCodeDocument | null> {
+  async findByVerificationCode(
+    code: string
+  ): Promise<VerificationCodeDocument | null> {
     return this.verificationCodeModel
       .findOne({
         code,

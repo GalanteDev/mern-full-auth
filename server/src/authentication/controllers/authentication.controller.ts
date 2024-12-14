@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { LoginDto, RegisterDto } from '../interfaces/auth.interfaces';
 import { AuthenticationService } from '../services/authentication.service';
-import { loginSchema, verificationEmailSchema } from '../validators/auth.validator';
+import {
+  loginSchema,
+  verificationEmailSchema,
+} from '../validators/auth.validator';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CookiesService } from '../services/cookies.service';
 import { Response } from 'express';
@@ -51,10 +54,8 @@ export class AuthenticationController {
       userAgent: userAgent || '',
     });
 
-    const { user, accessToken, refreshToken, mfaRequired } = await this.authService.login(
-      body,
-      userAgent || ''
-    );
+    const { user, accessToken, refreshToken, mfaRequired } =
+      await this.authService.login(body, userAgent || '');
 
     if (mfaRequired) {
       res.status(HttpStatus.OK).json({
@@ -79,19 +80,21 @@ export class AuthenticationController {
   }
 
   @Get('refresh-token')
-  async refreshToken(@Req() req: CustomRequest, @Res() res: Response): Promise<any> {
+  async refreshToken(
+    @Req() req: CustomRequest,
+    @Res() res: Response
+  ): Promise<any> {
     const refreshToken = req.cookies?.refreshToken;
 
-    console.log('Headers recibidos:', req.headers);
-    console.log('Cookies recibidas:', req.cookies);
-
-    console.log('Cookies recibidas:', req.cookies);
-
     if (!refreshToken) {
-      throw new HttpException('Refresh token not found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Refresh token not found',
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
-    const { accessToken, newRefreshToken } = await this.authService.refreshToken(refreshToken);
+    const { accessToken, newRefreshToken } =
+      await this.authService.refreshToken(refreshToken);
 
     if (newRefreshToken) {
       res.cookie(
@@ -103,7 +106,11 @@ export class AuthenticationController {
 
     res
       .status(HttpStatus.OK)
-      .cookie('accessToken', accessToken, this.cookiesService.getAccessTokenCookieOptions())
+      .cookie(
+        'accessToken',
+        accessToken,
+        this.cookiesService.getAccessTokenCookieOptions()
+      )
       .json({
         message: 'Refresh access token successfully',
       });

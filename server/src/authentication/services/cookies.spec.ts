@@ -29,7 +29,8 @@ describe('CookiesService', () => {
 
   const mockDateUtilsService: Partial<DateUtilsService> = {
     calculateExpirationDate: jest.fn((expiresIn: string) => {
-      if (expiresIn === '7d') return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      if (expiresIn === '7d')
+        return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
       if (expiresIn === '15m') return new Date(Date.now() + 15 * 60 * 1000);
       return new Date();
     }),
@@ -105,11 +106,15 @@ describe('CookiesService', () => {
       const jwtExpiresIn = '15m';
       const expirationDate = new Date(Date.now() + 15 * 60 * 1000);
 
-      jest.spyOn(dateUtilsService, 'calculateExpirationDate').mockReturnValueOnce(expirationDate);
+      jest
+        .spyOn(dateUtilsService, 'calculateExpirationDate')
+        .mockReturnValueOnce(expirationDate);
 
       const options = (cookiesService as any).getAccessTokenCookieOptions();
 
-      expect(dateUtilsService.calculateExpirationDate).toHaveBeenCalledWith(jwtExpiresIn);
+      expect(dateUtilsService.calculateExpirationDate).toHaveBeenCalledWith(
+        jwtExpiresIn
+      );
       expect(options).toEqual(
         expect.objectContaining({
           expires: expirationDate,
@@ -125,11 +130,15 @@ describe('CookiesService', () => {
       const jwtRefreshExpiresIn = '7d';
       const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-      jest.spyOn(dateUtilsService, 'calculateExpirationDate').mockReturnValueOnce(expirationDate);
+      jest
+        .spyOn(dateUtilsService, 'calculateExpirationDate')
+        .mockReturnValueOnce(expirationDate);
 
       const options = (cookiesService as any).getRefreshTokenCookieOptions();
 
-      expect(dateUtilsService.calculateExpirationDate).toHaveBeenCalledWith(jwtRefreshExpiresIn);
+      expect(dateUtilsService.calculateExpirationDate).toHaveBeenCalledWith(
+        jwtRefreshExpiresIn
+      );
       expect(options).toEqual(
         expect.objectContaining({
           expires: expirationDate,

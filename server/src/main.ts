@@ -29,7 +29,11 @@ async function bootstrap(): Promise<Handler | void> {
 }
 
 // Modo producción: Exporta el handler para AWS Lambda
-export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
+export const handler: Handler = async (
+  event: any,
+  context: Context,
+  callback: Callback
+) => {
   if (event.path === '' || event.path === undefined) event.path = '/';
 
   server = server ?? (await bootstrap());
@@ -39,6 +43,8 @@ export const handler: Handler = async (event: any, context: Context, callback: C
 // Modo desarrollo: Ejecuta la app localmente si `IS_OFFLINE` está activado
 if (process.env.IS_OFFLINE) {
   bootstrap()
+    // eslint-disable-next-line no-console
     .then(() => console.log('Server is running in offline mode'))
+    // eslint-disable-next-line no-console
     .catch((err) => console.error('Error bootstrapping the app:', err));
 }
