@@ -1,0 +1,10 @@
+{
+    "editor.formatOnSave": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.suggest.autoImports": true,
+    "javascript.suggest.autoImports": true,
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
+}

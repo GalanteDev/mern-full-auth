@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2021",
+    "outDir": "./dist",       // Carpeta de salida
+    "rootDir": "./src",       // Carpeta de entrada
+    "declaration": true,      // Genera archivos .d.ts (esto está funcionando)
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["src/**/*"],    // Archivos que se incluirán en la compilación
+  "exclude": ["node_modules", "dist"] // Exclusión de la carpeta dist y node_modules
+}
